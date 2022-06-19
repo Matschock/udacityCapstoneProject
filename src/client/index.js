@@ -1,10 +1,12 @@
 import { handleNewLocationSubmit } from './js/app'
-//
-import './styles/style.scss'
-// import './styles/base.scss'
-// import './styles/footer.scss'
+
+// import styles
+import './styles/base.scss'
+import './styles/header.scss'
+import './styles/structure.scss'
 // import './styles/form.scss'
-// import './styles/header.scss'
+// import './styles/footer.scss'
+
 //
 export {
   handleNewLocationSubmit

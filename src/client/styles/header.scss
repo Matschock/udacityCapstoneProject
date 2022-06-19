@@ -1,0 +1,23 @@
+.headercontainer{
+    display: grid;
+    width: 100%;
+    height: auto;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto ;
+    grid-template-areas: 
+    "nav" "space" "head" ;
+    grid-gap: 10px;
+    z-index: 1;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.navbarview{
+    margin-left: 5px;
+    border: 1px solid black;
+}
+
+.headline{
+    margin-right: 20px;
+    border: 1px solid black;
+}
