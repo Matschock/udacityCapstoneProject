@@ -21,7 +21,7 @@ body{
 }
 
 .entry{
-    background: rgba(59, 74, 107, .4);
+    background: #2360bda8;
 }
 
 #entryHolder{
@@ -42,6 +42,26 @@ body{
 
 .title{
 
+}
+
+.location{
+    grid-area: loc;
+    border: 1px solid black;
+}
+
+.startdate{
+    grid-area: sd;
+    border: 1px solid black;
+}
+
+.enddate{
+    grid-area: ed;
+    border: 1px solid black;
+}
+
+.bGenerate{
+    grid-area: bg;
+    border: 1px solid black;
 }
 
 /*  Basic Styling To Override Default For Basic HTML Elements */

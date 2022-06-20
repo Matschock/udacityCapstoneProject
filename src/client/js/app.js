@@ -2,20 +2,23 @@
 function handleNewLocationSubmit(event){
     /* Global Variables */
     // Personal API Key for OpenWeatherMap API
-    const myApiKey = '&appid=d447d3d87b60bb09c3b42f23c3d2d799&units=imperial';
-    const URLfoundation = 'https://api.openweathermap.org/data/2.5/weather?zip=';
-    const countryCode = ',de';
+        // const myApiKey = '&appid=d447d3d87b60bb09c3b42f23c3d2d799&units=imperial';
+        // const URLfoundation = 'https://api.openweathermap.org/data/2.5/weather?zip=';
+        // const countryCode = ',de';
+    // geonames URL
+    const urlGeonames = 'http://api.geonames.org/searchJSON?q=';
+    const usernameGeonames = '&username=matschok';
     //Declare Variable
     let date = new Date();
 
     // get entered zip code
-    const zip = document.getElementById('zip').value;
+    const loc = document.getElementById('loc').value;
     // get entered user response
-    const userResponse = document.getElementById('feelings').value;
+    const userResponse = document.getElementById('startdate').value;
     // Create a new date instance dynamically with JS
     let fullDate = date.getMonth()+1+'.'+ date.getDate()+'.'+ date.getFullYear();
-    // call OpenWeatherMap
-    getTempData(URLfoundation+zip+countryCode+myApiKey)
+    // get data from Geonames
+    getGeonamesData(urlGeonames+loc+'&maxRows=1'+usernameGeonames)
     .then(function(temperatureC){
         // Add data to POST requrest
         postStuff('/addToSource',{temperature: temperatureC, date: fullDate, userResponse: userResponse});
@@ -25,13 +28,15 @@ function handleNewLocationSubmit(event){
 }
 
 // Function to ask for data from OpenWeatherMap
-const getTempData = async (url) => {
+const getGeonamesData = async (url) => {
     const res = await fetch(url);
     try{
         const data = await res.json();
         // Kelvin to Celsius
-        let temperatureC = data.main.temp;
-        temperatureC = temperatureC.toFixed(2);
+        console.log('This is the ${data}')
+        console.log(data)
+        let temperatureC = data; //data.main.temp;
+        //temperatureC = temperatureC.toFixed(2);
         return temperatureC;
     } catch(error){
         console.log("error", error);

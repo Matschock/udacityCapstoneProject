@@ -35,13 +35,24 @@ main{
     // padding-top: 15px;
     border-radius: 4px;
     border: 1px solid rgb(0, 0, 0);
-    display: flex;
-    flex-direction: row;
+    // 
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 1fr auto;
+    grid-template-rows: auto auto;
+    grid-template-areas: 
+    "loc loc bg"
+    "sd ed bg";
+    grid-gap: 10px;
+    z-index: 1;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    justify-content: center;
 }
 
 .travelcard{
     grid-area: tc;
-    background: rgb(200, 200, 200);
+    background: rgb(235,235,235);
     border-top: 1px solid rgb(220, 220, 220);
     border-bottom: 1px solid rgb(220, 220, 220);
     border-radius: 4px;
