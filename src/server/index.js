@@ -43,9 +43,12 @@ app.post('/addToSource', addWeatherEntry);
 
 function addWeatherEntry(req, res){
     newEntry = {
-        temperature: req.body.temperature,
-        date: req.body.date,
-        userResponse: req.body.userResponse
+        city: req.body.city,
+        country: req.body.country,
+        lateral: req.body.lat,
+        longitudinal: req.body.lng,
+        startdate: req.body.startdate,
+        enddate: req.body.enddate,
     }
     projectData.push(newEntry);
     res.send(projectData);

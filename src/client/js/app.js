@@ -9,19 +9,24 @@ function handleNewLocationSubmit(event){
     const urlGeonames = 'http://api.geonames.org/searchJSON?q=';
     const usernameGeonames = '&username=matschok';
     //Declare Variable
-    let date = new Date();
+    let startdate = new Date();
+    let enddate = new Date();
 
-    // get entered zip code
-    const loc = document.getElementById('loc').value;
-    // get entered user response
-    const userResponse = document.getElementById('startdate').value;
+    // get entered location
+    const location = document.getElementById('loc').value;
+    // get start and end date
+    startdate = document.getElementById('startdate').value;
+    enddate = document.getElementById('enddate').value;
     // Create a new date instance dynamically with JS
-    let fullDate = date.getMonth()+1+'.'+ date.getDate()+'.'+ date.getFullYear();
+    //let fullDate = date.getMonth()+1+'.'+ date.getDate()+'.'+ date.getFullYear();
     // get data from Geonames
-    getGeonamesData(urlGeonames+loc+'&maxRows=1'+usernameGeonames)
-    .then(function(temperatureC){
+    getGeonamesData(urlGeonames+location+'&maxRows=1'+usernameGeonames)
+    .then(function(locData){
         // Add data to POST requrest
-        postStuff('/addToSource',{temperature: temperatureC, date: fullDate, userResponse: userResponse});
+        postStuff('/addToSource',{city: locData.city, country: locData.country, lat: locData.lat, lng: locData.lng, startdate: startdate, enddate: enddate});
+        // Calculate number of days until journey starts
+        const today = new Date();
+        const dayCountdown = daysUntilDeparture(startdate - today);
         // Update website!
         updateWebsite();
     })
@@ -32,12 +37,20 @@ const getGeonamesData = async (url) => {
     const res = await fetch(url);
     try{
         const data = await res.json();
-        // Kelvin to Celsius
+        // extrace relevant data from API response
+        let locData = {
+            city: data.geonames[0].name,
+            country: data.geonames[0].countryName,
+            lat: data.geonames[0].lat,
+            lng: data.geonames[0].lng
+        }
+        // print to console
         console.log('This is the ${data}')
         console.log(data)
-        let temperatureC = data; //data.main.temp;
-        //temperatureC = temperatureC.toFixed(2);
-        return temperatureC;
+        console.log(data.geonames[0].name)
+        console.log('This is the ${locData}')
+        console.log(locData)
+        return locData;
     } catch(error){
         console.log("error", error);
     }
@@ -65,12 +78,16 @@ const updateWebsite = async () => {
     try{
         const allData = await request.json();
         const lastIndex = allData.length - 1;
-        document.getElementById('date').innerHTML = allData[lastIndex].date;
-        document.getElementById('temp').innerHTML = allData [lastIndex].temperature + ' °F';
-        document.getElementById('content').innerHTML = allData[lastIndex].userResponse;
+        document.getElementById('date').innerHTML = `City: ${allData[lastIndex].city} (Lat: ${allData[lastIndex].lateral} Long: ${allData[lastIndex].longitudinal} )`;
+        document.getElementById('temp').innerHTML = `Country: ${allData[lastIndex].country}`;
+        document.getElementById('content').innerHTML = `From: ${allData[lastIndex].startdate}   Till: ${allData[lastIndex].enddate}`;
     } catch(error) {
         console.log("error", error);
     }
+}
+
+const daysUntilDeparture(currentDate, startDateJourney) => {
+    const deltaDays = Math.ceil(Math.abs(startDateJourney - currentDate)/(1000*60*60*24));
 }
 
 
