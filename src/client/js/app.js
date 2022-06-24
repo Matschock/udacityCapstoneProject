@@ -5,35 +5,60 @@ function handleNewLocationSubmit(event){
         // const myApiKey = '&appid=d447d3d87b60bb09c3b42f23c3d2d799&units=imperial';
         // const URLfoundation = 'https://api.openweathermap.org/data/2.5/weather?zip=';
         // const countryCode = ',de';
-    // geonames URL
-    const urlGeonames = 'http://api.geonames.org/searchJSON?q=';
-    const usernameGeonames = '&username=matschok';
-    //Declare Variable
-    let startdate = new Date();
-    let enddate = new Date();
+    
+    // Get all keys / usernames needed for API authentification from Server
+    getKeys('http://localhost:3000/keys')
+        // get meaningClound Sentiment Analysis
+        .then(function(keys){
+        
+    
+            // geonames URL
+            const urlGeonames = 'http://api.geonames.org/searchJSON?q=';
+            const usernameGeonames = '&username='+ keys.geonames_username;
+            console.log(`app.js: Username Geonames = ${keys.geonames_username}`)
+            
+            // weatherbit URL
+            const api_key_weatherbit = keys.weatherbit_key;
+            console.log(`app.js: API key weatherbit = ${keys.weatherbit_key}`)
+            
+            //Declare Variable
+            let startdate = new Date();
+            let enddate = new Date();
 
-    // get entered location
-    const location = document.getElementById('loc').value;
-    // get start and end date
-    startdate = document.getElementById('startdate').value;
-    enddate = document.getElementById('enddate').value;
-    // Create a new date instance dynamically with JS
-    //let fullDate = date.getMonth()+1+'.'+ date.getDate()+'.'+ date.getFullYear();
-    // get data from Geonames
-    getGeonamesData(urlGeonames+location+'&maxRows=1'+usernameGeonames)
-    .then(function(locData){
-        // Add data to POST requrest
-        postStuff('/addToSource',{city: locData.city, country: locData.country, lat: locData.lat, lng: locData.lng, startdate: startdate, enddate: enddate});
-        // Calculate number of days until journey starts
-        let today = new Date();
-        console.log(`Today: ${today}`)
-        // today = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-        // console.log(`Today: ${today}`)
-        // console.log(`Start Travel Date: ${startdate}`)
-        const dayCountdown = daysUntilDeparture(today, startdate);
-        // Update website!
-        updateWebsite(dayCountdown);
+            // get entered location
+            const location = document.getElementById('loc').value;
+            // get start and end date
+            startdate = document.getElementById('startdate').value;
+            enddate = document.getElementById('enddate').value;
+            // Create a new date instance dynamically with JS
+            //let fullDate = date.getMonth()+1+'.'+ date.getDate()+'.'+ date.getFullYear();
+            // get data from Geonames
+            getGeonamesData(urlGeonames+location+'&maxRows=1'+usernameGeonames)
+            .then(function(locData){
+                // Add data to POST requrest
+                postStuff('/addToSource',{city: locData.city, country: locData.country, lat: locData.lat, lng: locData.lng, startdate: startdate, enddate: enddate});
+                // Calculate number of days until journey starts
+                let today = new Date();
+                console.log(`Today: ${today}`)
+                // today = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                // console.log(`Today: ${today}`)
+                // console.log(`Start Travel Date: ${startdate}`)
+                const dayCountdown = daysUntilDeparture(today, startdate);
+                // Update website!
+                updateWebsite(dayCountdown);
+            })
     })
+}
+
+// get API keys from Server
+const getKeys = async (serveraddress) => {
+    const res = await fetch(serveraddress);
+    try{
+        const keys = await res.json()
+        return keys;
+    } catch(error){
+        console.log("error", error);
+    }
 }
 
 // Function to ask for data from OpenWeatherMap

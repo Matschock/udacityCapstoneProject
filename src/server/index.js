@@ -1,3 +1,7 @@
+// added dotnev for envirnoment variable for API key
+const dotenv = require('dotenv');
+dotenv.config();
+
 // Create empty Javascript object
 projectData = [];
 
@@ -32,11 +36,23 @@ function listening(){
 }
 
 /* GET route */
+// get Data from projectData Endpoint
 app.get('/source', getData);
 
 function getData(req, res){
     res.send(projectData);
 }
+
+// Define API Credentials
+var keys = {
+    'weatherbit_key': process.env.API_KEY_WEATHERBIT,
+    'geonames_username': process.env.USERNAME_GEONAMES
+}
+
+// API request
+app.get('/keys', function (req, res) {
+    res.json(keys);
+})
 
 /* POST route*/
 app.post('/addToSource', addWeatherEntry);
