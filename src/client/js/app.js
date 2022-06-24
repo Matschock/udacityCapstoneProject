@@ -1,49 +1,54 @@
-// Callback function performAction
-function handleNewLocationSubmit(event){
-    /* Global Variables */
-    // Personal API Key for OpenWeatherMap API
-        // const myApiKey = '&appid=d447d3d87b60bb09c3b42f23c3d2d799&units=imperial';
-        // const URLfoundation = 'https://api.openweathermap.org/data/2.5/weather?zip=';
-        // const countryCode = ',de';
-    
+// Callback function handleNewLocationSubmit
+function handleNewLocationSubmit(event){    
     // Get all keys / usernames needed for API authentification from Server
     getKeys('http://localhost:3000/keys')
         // get meaningClound Sentiment Analysis
         .then(function(keys){
-        
+
+            // Input checker missing. (mark date input field red when not fitting)
+            // Start Date must be later than todaz
+            // End Date must be later than start date?
+            
+            // weatherbit URL
+            const api_key_weatherbit = keys.weatherbit_key;
     
             // geonames URL
             const urlGeonames = 'http://api.geonames.org/searchJSON?q=';
             const usernameGeonames = '&username='+ keys.geonames_username;
-            console.log(`app.js: Username Geonames = ${keys.geonames_username}`)
-            
-            // weatherbit URL
-            const api_key_weatherbit = keys.weatherbit_key;
-            console.log(`app.js: API key weatherbit = ${keys.weatherbit_key}`)
-            
-            //Declare Variable
+
+            //Declare date variables
             let startdate = new Date();
             let enddate = new Date();
 
             // get entered location
             const location = document.getElementById('loc').value;
-            // get start and end date
+            // read out start & end date from user input
             startdate = document.getElementById('startdate').value;
             enddate = document.getElementById('enddate').value;
-            // Create a new date instance dynamically with JS
-            //let fullDate = date.getMonth()+1+'.'+ date.getDate()+'.'+ date.getFullYear();
-            // get data from Geonames
+            // get data from Geonames API
             getGeonamesData(urlGeonames+location+'&maxRows=1'+usernameGeonames)
             .then(function(locData){
-                // Add data to POST requrest
-                postStuff('/addToSource',{city: locData.city, country: locData.country, lat: locData.lat, lng: locData.lng, startdate: startdate, enddate: enddate});
+                console.log(`Location Data: ${locData}`)
+                let travelData = {
+                    city: locData.city, 
+                    country: locData.country, 
+                    lat: locData.lat, 
+                    lng: locData.lng, 
+                    startdate: startdate, 
+                    enddate: enddate
+                }
+                console.log(`Travel Data: ${travelData}`)
+                console.log(travelData)
+                // Add data to Source POST requrest
+                postStuff('/addToSource',travelData);
                 // Calculate number of days until journey starts
                 let today = new Date();
-                console.log(`Today: ${today}`)
-                // today = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-                // console.log(`Today: ${today}`)
-                // console.log(`Start Travel Date: ${startdate}`)
                 const dayCountdown = daysUntilDeparture(today, startdate);
+                // if countdown <= 16 days -> use forecast method
+                // if countdown > 16 days -> use historical data estimation
+                // get weather data from weatherbit
+                console.log(`Days until Departure: ${dayCountdown}`)
+                getForecastWeatherData(api_key_weatherbit,travelData)
                 // Update website!
                 updateWebsite(dayCountdown);
             })
@@ -102,6 +107,40 @@ const postStuff = async (url = '', data = {}) => {
     }
 }
 
+// Get weather data from weatherbit API
+const getForecastWeatherData = async (api_key_weatherbit, travelData) => {
+    // generate weatherbit url components
+    const urlFoundation = 'https://api.weatherbit.io/v2.0/forecast/daily?';
+    const location_coordinates = '&lat=' + travelData.lat + '&lon=-' + travelData.lng;
+    const forecastdays = '&days=16';
+    const API_key = '&key=' + api_key_weatherbit
+    // set together url
+    const url = urlFoundation+location_coordinates+forecastdays+API_key
+    const res = await fetch(url);
+    try{
+        const data = await res.json();
+        console.log('app.js: Weather Forecast:')
+        console.log(data)
+        // extrace relevant data from API response
+    //     let locData = {
+    //         city: data.geonames[0].name,
+    //         country: data.geonames[0].countryName,
+    //         lat: data.geonames[0].lat,
+    //         lng: data.geonames[0].lng
+    //     }
+    //     // print to console
+    //     console.log('This is the ${data}')
+    //     console.log(data)
+    //     console.log(data.geonames[0].name)
+    //     console.log('This is the ${locData}')
+    //     console.log(locData)
+    //     return locData;
+    } catch(error){
+        console.log("error", error);
+    }
+}
+
+// Update website with new location
 const updateWebsite = async (dayCountdown) => {
     const request = await fetch('/source');
     try{
