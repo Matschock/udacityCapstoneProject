@@ -25,10 +25,14 @@ function handleNewLocationSubmit(event){
         // Add data to POST requrest
         postStuff('/addToSource',{city: locData.city, country: locData.country, lat: locData.lat, lng: locData.lng, startdate: startdate, enddate: enddate});
         // Calculate number of days until journey starts
-        const today = new Date();
-        const dayCountdown = daysUntilDeparture(startdate - today);
+        let today = new Date();
+        console.log(`Today: ${today}`)
+        // today = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        // console.log(`Today: ${today}`)
+        // console.log(`Start Travel Date: ${startdate}`)
+        const dayCountdown = daysUntilDeparture(today, startdate);
         // Update website!
-        updateWebsite();
+        updateWebsite(dayCountdown);
     })
 }
 
@@ -73,21 +77,25 @@ const postStuff = async (url = '', data = {}) => {
     }
 }
 
-const updateWebsite = async () => {
+const updateWebsite = async (dayCountdown) => {
     const request = await fetch('/source');
     try{
         const allData = await request.json();
         const lastIndex = allData.length - 1;
-        document.getElementById('date').innerHTML = `City: ${allData[lastIndex].city} (Lat: ${allData[lastIndex].lateral} Long: ${allData[lastIndex].longitudinal} )`;
-        document.getElementById('temp').innerHTML = `Country: ${allData[lastIndex].country}`;
+        document.getElementById('date').innerHTML = `Days until Jounrey: ${dayCountdown}`;
+        document.getElementById('temp').innerHTML = `City: ${allData[lastIndex].city} (Lat: ${allData[lastIndex].lateral} Long: ${allData[lastIndex].longitudinal} )
+                                                    Country: ${allData[lastIndex].country}`;
         document.getElementById('content').innerHTML = `From: ${allData[lastIndex].startdate}   Till: ${allData[lastIndex].enddate}`;
     } catch(error) {
         console.log("error", error);
     }
 }
 
-const daysUntilDeparture(currentDate, startDateJourney) => {
-    const deltaDays = Math.ceil(Math.abs(startDateJourney - currentDate)/(1000*60*60*24));
+const daysUntilDeparture = (currentDate, startDateJourney) => {
+    // console.log(`StartDate - Today: ${startDateJourney.getTime() - currentDate.getTime()}`)
+    const startDate = new Date(startDateJourney);
+    const deltaDays = Math.ceil(Math.abs(startDate  - currentDate)/(1000*60*60*24));
+    return deltaDays;
 }
 
 
