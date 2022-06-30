@@ -47,7 +47,7 @@ function getData(req, res){
 var keys = {
     'geonames_username': process.env.USERNAME_GEONAMES,
     'weatherbit_key': process.env.API_KEY_WEATHERBIT,
-    'pixabay_key': process.env.API_KEY_pixabay
+    'pixabay_key': process.env.API_KEY_PIXABAY
 }
 
 // API request

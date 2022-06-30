@@ -3,33 +3,19 @@
 function handleNewLocationSubmit(event){    
     // Get all keys / usernames needed for API authentification from Server
     getKeys('http://localhost:3000/keys')
-        // get meaningClound Sentiment Analysis
         .then(function(keys){
-
             // Input checker missing. (mark date input field red when not fitting)
             // Start Date must be later than today
             // End Date must be later than start date?
             
-            // geonames key
+            // get API keys
             const urlGeonames = 'http://api.geonames.org/searchJSON?q=';
             const usernameGeonames = '&username='+ keys.geonames_username;
-            // weatherbit key
             const api_key_weatherbit = keys.weatherbit_key;
-            // pixabay key
             const api_key_pixabay = keys.pixabay_key;
 
             // get input data
             const inputdata = getInputData()
-
-            // //Declare date variables
-            // let startdate = new Date();
-            // let enddate = new Date();
-
-            // // get entered location
-            // const location = document.getElementById('loc').value;
-            // // read out start & end date from user input
-            // startdate = document.getElementById('startdate').value;
-            // enddate = document.getElementById('enddate').value;
 
             // get data from Geonames API
             getGeonamesData(urlGeonames+inputdata.location+'&maxRows=1'+usernameGeonames)
@@ -43,24 +29,19 @@ function handleNewLocationSubmit(event){
                     startdate: inputdata.startdate, 
                     enddate: inputdata.enddate
                 }
-                console.log(`Travel Data: ${travelData}`)
-                console.log(travelData)
                 // Add data to Source POST requrest
                 postStuff('/addToSource',travelData);
-                // Calculate number of days until journey starts
+                // Calculate number of days until departure and journey duration
                 let today = new Date();
-                // days until departure
                 const dayCountdown = deltaDays(today, inputdata.startdate);
-                // duration of journey
                 const jouneyDuration = deltaDays(inputdata.startdate, inputdata.enddate)
-                // get weather data for input location from weatherbit
                 console.log(`Days until departure: ${dayCountdown}`)
                 console.log(`Duration of journey in days: ${jouneyDuration}`)
+                // get weather data for input location from weatherbit
                 getWeatherData(api_key_weatherbit,travelData,dayCountdown,jouneyDuration)
-                //getForecastWeatherData(api_key_weatherbit,travelData)
                 .then(function(fullWeatherData){
                     // get a picture of the location from pixabay API
-                    // getPicture(location)
+                    getPicture(api_key_pixabay,travelData.city)
                     // Update website!
                     updateWebsite(dayCountdown,fullWeatherData);
                 })
@@ -360,61 +341,26 @@ const deltaDays = (currentDate, startDateJourney) => {
 // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< PICTURE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // <<< Start Function --------------------------------------------------------
 // Get weather data from weatherbit API
-const getPicture = async (api_key_weatherbit, location) => {
-    // use the best method to get weather data for journey dates
-    let weatherData = [];
-    if (((dayCountdown) <= 1) && ((dayCountdown+jouneyDuration) <= 16)){
-        // display current weather for the current day
-        getCurrentWeatherData(api_key_weatherbit,travelData, weatherData)
-        .then(function(weatherData){
-            console.log('Weather Data Current')
-            console.log(weatherData)
-            getForecastWeatherData(api_key_weatherbit,travelData, weatherData, true)
-            .then(function(weatherData){
-                console.log(weatherData)
-                return weatherData;
-            })
-        })
-    } else if (((dayCountdown) > 1) && ((dayCountdown+jouneyDuration) <= 16)){
-        // use forecast method
-        getForecastWeatherData(api_key_weatherbit,travelData, weatherData, false)
-        .then(function(weatherData){
-            return weatherData;
-        })
-    } else if ((dayCountdown <= 1) && ((dayCountdown+jouneyDuration) >= 16)){
-        // display current weather for the current day & forecast & more than forecast (for vacation longer than 16 days)
-        getCurrentWeatherData(api_key_weatherbit,travelData, weatherData)
-        .then(function(weatherData){
-            console.log('Weather Data Current')
-            console.log(weatherData)
-            getForecastWeatherData(api_key_weatherbit,travelData, weatherData, true)
-            .then(function(weatherData){
-                const nDays = dayCountdown+jouneyDuration-16;
-                setUnknownWeatherData(nDays, weatherData, travelData.startdate,false)
-                .then(function(weatherData){
-                    return weatherData;
-                })
-            })
-        })
-    } else if ((dayCountdown <= 16) && ((dayCountdown+jouneyDuration) >= 16)){
-        // mix forecast and historical
-        getForecastWeatherData(api_key_weatherbit,travelData, weatherData, false)
-        .then(function(weatherData){
-            const nDays = dayCountdown+jouneyDuration-16;
-            setUnknownWeatherData(nDays, weatherData, travelData.startdate,false)
-            .then(function(weatherData){
-                return weatherData;
-            })
-        })
-    } else if (dayCountdown > 16){
-        // use historical data estimation method
-        const nDays = jouneyDuration;
-        setUnknownWeatherData(nDays, weatherData, travelData.startdate, true)
-        .then(function(weatherData){
-            return weatherData;
-        })
+const getPicture = async (api_key_pixabay, location) => {
+    console.log(`getPicture - API-Key: ${api_key_pixabay}`)
+    console.log(`getPicture - Location: ${location}`)
+    // display current weather for the current day & forecast & more than forecast (for vacation longer than 16 days)
+    const urlFoundation = 'https://pixabay.com/api/';
+    const API_key = '?key=' + api_key_pixabay
+    const searchterm = '&q=' + location + '&image_type=photo';
+    
+    // set together url
+    const url = urlFoundation+API_key+searchterm
+    const res = await fetch(url);
+    try{
+        const data = await res.json();
+        console.log('app.js: PictureData:')
+        console.log(data)
+        // extract relevant data from API response
+        return data;
+    } catch(error){
+        console.log("error", error);
     }
-    return weatherData;
 }
 // End Function >>> 
 
