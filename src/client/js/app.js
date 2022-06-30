@@ -7,27 +7,32 @@ function handleNewLocationSubmit(event){
         .then(function(keys){
 
             // Input checker missing. (mark date input field red when not fitting)
-            // Start Date must be later than todaz
+            // Start Date must be later than today
             // End Date must be later than start date?
             
-            // weatherbit URL
-            const api_key_weatherbit = keys.weatherbit_key;
-    
-            // geonames URL
+            // geonames key
             const urlGeonames = 'http://api.geonames.org/searchJSON?q=';
             const usernameGeonames = '&username='+ keys.geonames_username;
+            // weatherbit key
+            const api_key_weatherbit = keys.weatherbit_key;
+            // pixabay key
+            const api_key_pixabay = keys.pixabay_key;
 
-            //Declare date variables
-            let startdate = new Date();
-            let enddate = new Date();
+            // get input data
+            const inputdata = getInputData()
 
-            // get entered location
-            const location = document.getElementById('loc').value;
-            // read out start & end date from user input
-            startdate = document.getElementById('startdate').value;
-            enddate = document.getElementById('enddate').value;
+            // //Declare date variables
+            // let startdate = new Date();
+            // let enddate = new Date();
+
+            // // get entered location
+            // const location = document.getElementById('loc').value;
+            // // read out start & end date from user input
+            // startdate = document.getElementById('startdate').value;
+            // enddate = document.getElementById('enddate').value;
+
             // get data from Geonames API
-            getGeonamesData(urlGeonames+location+'&maxRows=1'+usernameGeonames)
+            getGeonamesData(urlGeonames+inputdata.location+'&maxRows=1'+usernameGeonames)
             .then(function(locData){
                 console.log(`Location Data: ${locData}`)
                 let travelData = {
@@ -35,8 +40,8 @@ function handleNewLocationSubmit(event){
                     country: locData.country, 
                     lat: locData.lat, 
                     lng: locData.lng, 
-                    startdate: startdate, 
-                    enddate: enddate
+                    startdate: inputdata.startdate, 
+                    enddate: inputdata.enddate
                 }
                 console.log(`Travel Data: ${travelData}`)
                 console.log(travelData)
@@ -45,15 +50,17 @@ function handleNewLocationSubmit(event){
                 // Calculate number of days until journey starts
                 let today = new Date();
                 // days until departure
-                const dayCountdown = deltaDays(today, startdate);
+                const dayCountdown = deltaDays(today, inputdata.startdate);
                 // duration of journey
-                const jouneyDuration = deltaDays(startdate, enddate)
-                // get weather data from weatherbit
+                const jouneyDuration = deltaDays(inputdata.startdate, inputdata.enddate)
+                // get weather data for input location from weatherbit
                 console.log(`Days until departure: ${dayCountdown}`)
                 console.log(`Duration of journey in days: ${jouneyDuration}`)
                 getWeatherData(api_key_weatherbit,travelData,dayCountdown,jouneyDuration)
                 //getForecastWeatherData(api_key_weatherbit,travelData)
                 .then(function(fullWeatherData){
+                    // get a picture of the location from pixabay API
+                    // getPicture(location)
                     // Update website!
                     updateWebsite(dayCountdown,fullWeatherData);
                 })
@@ -72,6 +79,27 @@ const getKeys = async (serveraddress) => {
     } catch(error){
         console.log("error", error);
     }
+}
+// End Function >>> 
+
+// <<< Start Function --------------------------------------------------------
+// Function to ask for data from OpenWeatherMap
+const getInputData = () =>{
+    //Declare date variables
+    let startdate = new Date();
+    let enddate = new Date();
+
+    // get entered location
+    const location = document.getElementById('loc').value;
+    // read out start & end date from user input
+    startdate = document.getElementById('startdate').value;
+    enddate = document.getElementById('enddate').value;
+    const inputdata = {
+        location: location,
+        startdate: startdate,
+        enddate: enddate
+    }
+    return inputdata
 }
 // End Function >>> 
 
@@ -121,6 +149,7 @@ const postStuff = async (url = '', data = {}) => {
 }
 // End Function >>> 
 
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< WEATHER >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 // <<< Start Function --------------------------------------------------------
 // Get weather data from weatherbit API
 const getWeatherData = async (api_key_weatherbit, travelData,dayCountdown,jouneyDuration) => {
@@ -318,6 +347,78 @@ const relevantWeatherData = (data) => {
 // End Function >>> 
 
 // <<< Start Function --------------------------------------------------------
+// Calculate days until departure
+const deltaDays = (currentDate, startDateJourney) => {
+    // console.log(`StartDate - Today: ${startDateJourney.getTime() - currentDate.getTime()}`)
+    const startDate = new Date(currentDate);
+    const endDate = new Date(startDateJourney);
+    const deltaDays = Math.ceil(Math.abs(startDate  - endDate)/(1000*60*60*24));
+    return deltaDays;
+}
+// End Function >>> 
+
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< PICTURE >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// <<< Start Function --------------------------------------------------------
+// Get weather data from weatherbit API
+const getPicture = async (api_key_weatherbit, location) => {
+    // use the best method to get weather data for journey dates
+    let weatherData = [];
+    if (((dayCountdown) <= 1) && ((dayCountdown+jouneyDuration) <= 16)){
+        // display current weather for the current day
+        getCurrentWeatherData(api_key_weatherbit,travelData, weatherData)
+        .then(function(weatherData){
+            console.log('Weather Data Current')
+            console.log(weatherData)
+            getForecastWeatherData(api_key_weatherbit,travelData, weatherData, true)
+            .then(function(weatherData){
+                console.log(weatherData)
+                return weatherData;
+            })
+        })
+    } else if (((dayCountdown) > 1) && ((dayCountdown+jouneyDuration) <= 16)){
+        // use forecast method
+        getForecastWeatherData(api_key_weatherbit,travelData, weatherData, false)
+        .then(function(weatherData){
+            return weatherData;
+        })
+    } else if ((dayCountdown <= 1) && ((dayCountdown+jouneyDuration) >= 16)){
+        // display current weather for the current day & forecast & more than forecast (for vacation longer than 16 days)
+        getCurrentWeatherData(api_key_weatherbit,travelData, weatherData)
+        .then(function(weatherData){
+            console.log('Weather Data Current')
+            console.log(weatherData)
+            getForecastWeatherData(api_key_weatherbit,travelData, weatherData, true)
+            .then(function(weatherData){
+                const nDays = dayCountdown+jouneyDuration-16;
+                setUnknownWeatherData(nDays, weatherData, travelData.startdate,false)
+                .then(function(weatherData){
+                    return weatherData;
+                })
+            })
+        })
+    } else if ((dayCountdown <= 16) && ((dayCountdown+jouneyDuration) >= 16)){
+        // mix forecast and historical
+        getForecastWeatherData(api_key_weatherbit,travelData, weatherData, false)
+        .then(function(weatherData){
+            const nDays = dayCountdown+jouneyDuration-16;
+            setUnknownWeatherData(nDays, weatherData, travelData.startdate,false)
+            .then(function(weatherData){
+                return weatherData;
+            })
+        })
+    } else if (dayCountdown > 16){
+        // use historical data estimation method
+        const nDays = jouneyDuration;
+        setUnknownWeatherData(nDays, weatherData, travelData.startdate, true)
+        .then(function(weatherData){
+            return weatherData;
+        })
+    }
+    return weatherData;
+}
+// End Function >>> 
+
+// <<< Start Function --------------------------------------------------------
 // Update website with new location
 const updateWebsite = async (dayCountdown) => {
     const request = await fetch('/source');
@@ -334,16 +435,7 @@ const updateWebsite = async (dayCountdown) => {
 }
 // End Function >>> 
 
-// <<< Start Function --------------------------------------------------------
-// Calculate days until departure
-const deltaDays = (currentDate, startDateJourney) => {
-    // console.log(`StartDate - Today: ${startDateJourney.getTime() - currentDate.getTime()}`)
-    const startDate = new Date(currentDate);
-    const endDate = new Date(startDateJourney);
-    const deltaDays = Math.ceil(Math.abs(startDate  - endDate)/(1000*60*60*24));
-    return deltaDays;
-}
-// End Function >>> 
+
 
 
 export { handleNewLocationSubmit }
