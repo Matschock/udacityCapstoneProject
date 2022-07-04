@@ -3,49 +3,52 @@
 function handleNewLocationSubmit(event){    
     // Get all keys / usernames needed for API authentification from Server
     getKeys('http://localhost:3000/keys')
-        .then(function(keys){
-            // Input checker missing. (mark date input field red when not fitting)
-            // Start Date must be later than today
-            // End Date must be later than start date?
-            
-            // get API keys
-            const urlGeonames = 'http://api.geonames.org/searchJSON?q=';
-            const usernameGeonames = '&username='+ keys.geonames_username;
-            const api_key_weatherbit = keys.weatherbit_key;
-            const api_key_pixabay = keys.pixabay_key;
+    .then(function(keys){
+        // Input checker missing. (mark date input field red when not fitting)
+        // Start Date must be later than today
+        // End Date must be later than start date?
+        
+        // get API keys
+        const urlGeonames = 'http://api.geonames.org/searchJSON?q=';
+        const usernameGeonames = '&username='+ keys.geonames_username;
+        const api_key_weatherbit = keys.weatherbit_key;
+        const api_key_pixabay = keys.pixabay_key;
 
-            // get input data
-            const inputdata = getInputData()
+        // get input data
+        const inputdata = getInputData()
 
-            // get data from Geonames API
-            getGeonamesData(urlGeonames+inputdata.location+'&maxRows=1'+usernameGeonames)
-            .then(function(locData){
-                console.log(`Location Data: ${locData}`)
-                let travelData = {
-                    city: locData.city, 
-                    country: locData.country, 
-                    lat: locData.lat, 
-                    lng: locData.lng, 
-                    startdate: inputdata.startdate, 
-                    enddate: inputdata.enddate
-                }
-                // Add data to Source POST requrest
-                postStuff('/addToSource',travelData);
-                // Calculate number of days until departure and journey duration
-                let today = new Date();
-                const dayCountdown = deltaDays(today, inputdata.startdate);
-                const jouneyDuration = deltaDays(inputdata.startdate, inputdata.enddate)
-                console.log(`Days until departure: ${dayCountdown}`)
-                console.log(`Duration of journey in days: ${jouneyDuration}`)
-                // get weather data for input location from weatherbit
-                getWeatherData(api_key_weatherbit,travelData,dayCountdown,jouneyDuration)
-                .then(function(fullWeatherData){
-                    // get a picture of the location from pixabay API
-                    getPicture(api_key_pixabay,travelData.city)
+        // get data from Geonames API
+        getGeonamesData(urlGeonames+inputdata.location+'&maxRows=1'+usernameGeonames)
+        .then(function(locData){
+            console.log(`Location Data: ${locData}`)
+            let travelData = {
+                city: locData.city, 
+                country: locData.country, 
+                lat: locData.lat, 
+                lng: locData.lng, 
+                startdate: inputdata.startdate, 
+                enddate: inputdata.enddate
+            }
+            // Add data to Source POST requrest
+            postStuff('/addToSource',travelData);
+            // Calculate number of days until departure and journey duration
+            let today = new Date();
+            const dayCountdown = deltaDays(today, inputdata.startdate);
+            const jouneyDuration = deltaDays(inputdata.startdate, inputdata.enddate)
+            console.log(`Days until departure: ${dayCountdown}`)
+            console.log(`Duration of journey in days: ${jouneyDuration}`)
+            // get weather data for input location from weatherbit
+            getWeatherData(api_key_weatherbit,travelData,dayCountdown,jouneyDuration)
+            .then(function(fullWeatherData){
+                // get a picture of the location from pixabay API
+                getPicture(api_key_pixabay,travelData.city)
+                .then(function(picturepath){
                     // Update website!
-                    updateWebsite(dayCountdown,fullWeatherData);
+                    console.log('Updating website...')
+                    updateWebsite(dayCountdown,fullWeatherData, picturepath);
                 })
             })
+        })
     })
 }
 // End Function >>> 
@@ -354,10 +357,10 @@ const getPicture = async (api_key_pixabay, location) => {
     const res = await fetch(url);
     try{
         const data = await res.json();
-        console.log('app.js: PictureData:')
-        console.log(data)
+        console.log(`app.js: PictureData: ${data.hits[1].webformatURL}`)
+        const picturepath = data.hits[1].webformatURL;
         // extract relevant data from API response
-        return data;
+        return picturepath;
     } catch(error){
         console.log("error", error);
     }
@@ -366,7 +369,7 @@ const getPicture = async (api_key_pixabay, location) => {
 
 // <<< Start Function --------------------------------------------------------
 // Update website with new location
-const updateWebsite = async (dayCountdown) => {
+const updateWebsite = async (dayCountdown,fullWeatherData, picturepath) => {
     const request = await fetch('/source');
     try{
         const allData = await request.json();
@@ -375,6 +378,7 @@ const updateWebsite = async (dayCountdown) => {
         document.getElementById('temp').innerHTML = `City: ${allData[lastIndex].city} (Lat: ${allData[lastIndex].lateral} Long: ${allData[lastIndex].longitudinal} )
                                                     Country: ${allData[lastIndex].country}`;
         document.getElementById('content').innerHTML = `From: ${allData[lastIndex].startdate}   Till: ${allData[lastIndex].enddate}`;
+        document.getElementById('image').innerHTML = `<img src="${picturepath}" alt="alt">`;
     } catch(error) {
         console.log("error", error);
     }
