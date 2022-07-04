@@ -21,3 +21,17 @@
     margin-right: 20px;
     border: 1px solid black;
 }
+
+.fadeOut{
+    visibility: hidden;
+}
+.fadeIn{
+    visibility: visible;
+}
+
+a {
+    color: black;
+}
+a:link, a:visited {
+    text-decoration: none;
+}

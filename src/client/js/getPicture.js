@@ -23,7 +23,7 @@ const getPictureData = async (api_key_pixabay, location) => {
             try{
                 const data = await res.json();
                 // extract picture url from received data
-                console.log(`app.js: PictureData: ${data.hits[0].webformatURL}`)
+                console.log(`app.js: PictureData: ${data.hits[1].webformatURL}`)
                 const picturepath = data.hits[0].webformatURL;
                 return picturepath;
             } catch(error) {
