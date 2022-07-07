@@ -1,6 +1,6 @@
 // <<< Start Function --------------------------------------------------------
 // Callback function handleNewLocationSubmit
-function handleNewLocationSubmit(event){    
+async function handleNewLocationSubmit(event){    
     // Get all keys / usernames needed for API authentification from Server
     getKeys('http://localhost:3000/keys')
     .then(function(keys){
@@ -24,7 +24,7 @@ function handleNewLocationSubmit(event){
             // console.log(`Location Data: ${locData}`)
             const travelData = aggregateData(locData, inputdata)
             // Add data to Source POST requrest
-            postStuff('/addToSource',locData, inputdata);
+            postStuff('/addToSource',travelData, inputdata);
             // Calculate number of days until departure and journey duration
             let today = new Date();
             const dayCountdown = deltaDays(today, inputdata.startdate);
@@ -32,11 +32,13 @@ function handleNewLocationSubmit(event){
             // get weather data for input location from weatherbit
             Client.getWeatherData(api_key_weatherbit,travelData,dayCountdown,jouneyDuration)
             .then(function(fullWeatherData){
+                console.log('app.js: weatherdata received?')
+                console.log(fullWeatherData)
                 // get a picture of the location from pixabay API
                 Client.getPictureData(api_key_pixabay,travelData.city)
                 .then(function(picturepath){
                     // Update website!
-                    console.log('Updating website...')
+                    console.log(':::Updating website...:::')
                     updateWebsite(dayCountdown,fullWeatherData, picturepath);
                 })
             })
@@ -66,10 +68,10 @@ const getInputData = () =>{
     let enddate = new Date();
 
     // get entered location
-    const location = document.getElementById('loc').value;
+    const location = document.getElementById('locationinput').value;
     // read out start & end date from user input
-    startdate = document.getElementById('startdate').value;
-    enddate = document.getElementById('enddate').value;
+    startdate = document.getElementById('startdateinput').value;
+    enddate = document.getElementById('enddateinput').value;
     const inputdata = {
         location: location,
         startdate: startdate,
@@ -93,10 +95,7 @@ const getGeonamesData = async (url) => {
             lng: data.geonames[0].lng
         }
         // print to console
-        console.log('This is the ${data}')
-        console.log(data)
-        console.log(data.geonames[0].name)
-        console.log('This is the ${locData}')
+        console.log('Geonames:')
         console.log(locData)
         return locData;
     } catch(error){
@@ -107,7 +106,7 @@ const getGeonamesData = async (url) => {
 
 // <<< Start Function --------------------------------------------------------
 // Function to aggregate data from geonames and from input
-const aggregateData = async (geonamesdata, inputdata) => {
+const aggregateData = (geonamesdata, inputdata) => {
     let travelData = {
         city: geonamesdata.city, 
         country: geonamesdata.country, 
@@ -159,14 +158,14 @@ const updateWebsite = async (dayCountdown,fullWeatherData, picturepath) => {
         const allData = await request.json();
         const lastIndex = allData.length - 1;
         
-        //document.getElementById('datefrom').innerHTML = `City: ${allData[lastIndex].city} (Lat: ${allData[lastIndex].lateral} Long: ${allData[lastIndex].longitudinal} )
-        //                                            Country: ${allData[lastIndex].country}`;
         document.getElementById('traveldestination').innerHTML = allData[lastIndex].city;
         document.getElementById('datefrom').innerHTML = allData[lastIndex].startdate;
         document.getElementById('dateuntil').innerHTML = allData[lastIndex].enddate;
         document.getElementById('countdown').innerHTML = dayCountdown;
         document.getElementById('picture').innerHTML = `<img src="${picturepath}" alt="alt">`;
         // weatherdata - fullWeatherData
+        console.log('updateWebsite: weatherdata received')
+        console.log(fullWeatherData)
         const weathercontainer = document.getElementById('weather');
         let i = 1;
         for (day in fullWeatherData){
@@ -174,7 +173,6 @@ const updateWebsite = async (dayCountdown,fullWeatherData, picturepath) => {
             weatheritem.classList.add(weather-item);
             weatheritem.innerHTML = `${i} - Temp: ${day.temp} \u00B0 C`;
             weathercontainer.appendChild(weatheritem);
-
         }
     } catch(error) {
         console.log("error", error);

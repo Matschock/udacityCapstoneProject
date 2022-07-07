@@ -6,7 +6,7 @@ function checkInput(inputText) {
     const enddate = new Date(inputText.enddate);
 
     const deltaDays = Math.ceil((enddate-startdate)/(1000*60*60*24));
-    console.log(`InputChecker: ${deltaDays}`)
+    //console.log(`InputChecker: ${deltaDays}`)
 
     if(deltaDays<0){
         alert("Invalid dates entered.")

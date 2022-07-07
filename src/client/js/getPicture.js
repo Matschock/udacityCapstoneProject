@@ -2,8 +2,8 @@
 // <<< Start Function --------------------------------------------------------
 // Get weather data from weatherbit API
 const getPictureData = async (api_key_pixabay, location) => {
-    console.log(`getPicture - API-Key: ${api_key_pixabay}`)
-    console.log(`getPicture - Location: ${location}`)
+    // console.log(`getPicture - API-Key: ${api_key_pixabay}`)
+    // console.log(`getPicture - Location: ${location}`)
     // display current weather for the current day & forecast & more than forecast (for vacation longer than 16 days)
     const urlFoundation = 'https://pixabay.com/api/';
     const API_key = '?key=' + api_key_pixabay
@@ -11,7 +11,6 @@ const getPictureData = async (api_key_pixabay, location) => {
     
     // set together url
     const url = urlFoundation+API_key+searchterm
-    console.log(`Pixalog url: ${url}`)
     const res = await fetch(url);
     try{
         const data = await res.json();
@@ -23,7 +22,6 @@ const getPictureData = async (api_key_pixabay, location) => {
             try{
                 const data = await res.json();
                 // extract picture url from received data
-                console.log(`app.js: PictureData: ${data.hits[1].webformatURL}`)
                 const picturepath = data.hits[0].webformatURL;
                 return picturepath;
             } catch(error) {
@@ -31,7 +29,7 @@ const getPictureData = async (api_key_pixabay, location) => {
             }
         } else {
             // extract picture url from received data
-            console.log(`app.js: PictureData: ${data.hits[0].webformatURL}`)
+            console.log(`getPicture.js: ${data.hits[0].webformatURL}`)
             const picturepath = data.hits[0].webformatURL;
             return picturepath;
         }
