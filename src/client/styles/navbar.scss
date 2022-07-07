@@ -1,0 +1,120 @@
+.grid-navbar{
+    display: grid;
+    width: 100%;
+    grid-template-columns: auto auto 1fr auto;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+    "loc loc loc loc"
+    "sdate edate . but";
+    grid-gap: 5px;
+    z-index: 1;
+}
+
+#location{
+    grid-area: loc;
+    display: grid;
+    width: 100%;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto;
+    grid-template-areas:
+    "locLbl locInp";
+    grid-gap: 5px;
+    z-index: 1;
+}
+
+#locationlabel{
+    grid-area: locLbl;
+    margin:5px;
+}
+
+#locationinput{
+    grid-area: locInp;
+    height: 25px;
+    margin:5px;
+}
+
+#bAdd{
+    grid-area: but;
+}
+
+#startdate{
+    grid-area: sdate;
+    margin-left: 5px;
+}
+
+#startdatelabel{
+}
+
+#startdateinput{
+}
+
+#enddate{
+    grid-area: edate;
+}
+
+#enddatelabel{
+    color: #2f2f2f;
+}
+
+#enddateinput{
+}
+
+button{
+    margin-right: 5px;
+    width: 100px;
+    height: 25px;
+    background: #186ae5;
+    color: #ebebeb;
+    font-size: 18px;
+    font-family: 'Oswald', sans-serif;
+    border: none;
+    border: 1px solid #145cc8;
+    border-radius: 3px;
+    box-shadow: 2px 4px 5px #444;
+}
+
+input{
+    background:#fffcf5;
+    color: #2f2f2f;
+    font-size: 14px;
+    font-family: 'Oswald', sans-serif;
+    border: 1px solid #145cc8;
+    border-radius: 3px;
+}
+
+label{
+    // display:block;
+    font-size: 18px;
+}
+
+/* Reset style for HTML element on active to have no border*/
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+/* Style for Placeholder Text*/
+::placeholder { /* Firefox, Chrome, Opera */ 
+    color: #2f2f2f; 
+    font-family: 'Oswald', sans-serif;
+}
+
+::placeholder { /* Firefox, Chrome, Opera */ 
+    color: #2f2f2f; 
+    font-family: 'Oswald', sans-serif;
+
+} 
+  
+:-ms-input-placeholder { /* Internet Explorer 10-11 */ 
+    color: #2f2f2f; 
+    font-family: 'Oswald', sans-serif;
+
+} 
+  
+::-ms-input-placeholder { /* Microsoft Edge */ 
+    color: #2f2f2f; 
+    font-family: 'Oswald', sans-serif;
+
+}

@@ -158,11 +158,24 @@ const updateWebsite = async (dayCountdown,fullWeatherData, picturepath) => {
     try{
         const allData = await request.json();
         const lastIndex = allData.length - 1;
-        document.getElementById('date').innerHTML = `Days until Jounrey: ${dayCountdown}`;
-        document.getElementById('temp').innerHTML = `City: ${allData[lastIndex].city} (Lat: ${allData[lastIndex].lateral} Long: ${allData[lastIndex].longitudinal} )
-                                                    Country: ${allData[lastIndex].country}`;
-        document.getElementById('content').innerHTML = `From: ${allData[lastIndex].startdate}   Till: ${allData[lastIndex].enddate}`;
-        document.getElementById('image').innerHTML = `<img src="${picturepath}" alt="alt">`;
+        
+        //document.getElementById('datefrom').innerHTML = `City: ${allData[lastIndex].city} (Lat: ${allData[lastIndex].lateral} Long: ${allData[lastIndex].longitudinal} )
+        //                                            Country: ${allData[lastIndex].country}`;
+        document.getElementById('traveldestination').innerHTML = allData[lastIndex].city;
+        document.getElementById('datefrom').innerHTML = allData[lastIndex].startdate;
+        document.getElementById('dateuntil').innerHTML = allData[lastIndex].enddate;
+        document.getElementById('countdown').innerHTML = dayCountdown;
+        document.getElementById('picture').innerHTML = `<img src="${picturepath}" alt="alt">`;
+        // weatherdata - fullWeatherData
+        const weathercontainer = document.getElementById('weather');
+        let i = 1;
+        for (day in fullWeatherData){
+            let weatheritem = document.createElement(div);
+            weatheritem.classList.add(weather-item);
+            weatheritem.innerHTML = `${i} - Temp: ${day.temp} \u00B0 C`;
+            weathercontainer.appendChild(weatheritem);
+
+        }
     } catch(error) {
         console.log("error", error);
     }

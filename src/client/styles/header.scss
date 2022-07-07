@@ -1,32 +1,30 @@
 .headercontainer{
     display: grid;
-    width: 100%;
+    width: 98%;
     height: auto;
     grid-template-columns: auto 1fr auto;
     grid-template-rows: auto ;
     grid-template-areas: 
-    "nav" "space" "head" ;
+    "nav space head" ;
     grid-gap: 10px;
     z-index: 1;
     margin-top: 10px;
     padding-top: 10px;
 }
 
-.navbarview{
-    margin-left: 5px;
+#navbarview{
+    margin-left: 10px;
     border: 1px solid black;
+    grid-area: nav;
+}
+
+#space{
+    grid-area: space;
 }
 
 .headline{
-    margin-right: 20px;
     border: 1px solid black;
-}
-
-.fadeOut{
-    visibility: hidden;
-}
-.fadeIn{
-    visibility: visible;
+    grid-area: head;
 }
 
 a {
@@ -35,3 +33,4 @@ a {
 a:link, a:visited {
     text-decoration: none;
 }
+

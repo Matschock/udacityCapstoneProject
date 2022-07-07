@@ -8,7 +8,8 @@ import { toggleNavbar } from './js/dynamicPageElements'
 import './styles/base.scss'
 import './styles/header.scss'
 import './styles/structure.scss'
-// import './styles/form.scss'
+import './styles/navbar.scss'
+import './styles/travelcard.scss'
 // import './styles/footer.scss'
 
 //
@@ -23,6 +24,6 @@ export {
 console.log("From client side index.js: we are here");
 
 // Event listener for button
-document.getElementById('generate').addEventListener('click', handleNewLocationSubmit);
+document.getElementById('add').addEventListener('click', handleNewLocationSubmit);
 // Event listener for navbar
 document.getElementById('navbarview').addEventListener('click', toggleNavbar);

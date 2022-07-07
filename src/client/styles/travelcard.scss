@@ -1,0 +1,114 @@
+.heading{
+    background: yellow;
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+#travelcard{
+    background: white;
+    padding: 5px;
+}
+
+.grid-travelcard{
+    display: grid;
+    width: 99%;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto auto minmax(200px, auto) 110px;
+    grid-template-areas:
+    "title picture"
+    "dates picture"
+    "counter picture"
+    "content picture"
+    "content weather";
+    grid-gap: 5px;
+    z-index: 1;
+}
+
+#title{
+    grid-area: title;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    background: skyblue;
+}
+#title > div {
+    margin: auto;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+.label{
+    font-size: 0.8em;
+    color: rgb(40, 40, 40);
+    
+}
+#traveldestination{
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+#dates{
+    grid-area: dates;
+    display: flex;
+    flex-direction: row;
+    background: skyblue;
+}
+#dates > div{
+    margin: auto;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+#datefrom{
+    font-style: italic;
+    font-size: 0.8em;
+}
+#dateuntil{
+    font-style: italic;
+    font-size: 0.8em;
+}
+
+#counter{
+    grid-area: counter;
+    display: flex;
+    flex-direction: row;
+    background: skyblue;
+}
+#counter > div{
+    margin: auto;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+#countdown{
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+#weather{
+    grid-area: weather;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    background-color: whitesmoke;
+}
+
+#content{
+    grid-area: content;
+    background: skyblue;
+}
+
+#picture{
+    grid-area: picture;
+    width: 800px;
+    background: whitesmoke;
+}
+
+.weather-item{
+    border-radius: 4px;
+    border: 1px solid #444;
+    border-top: 1px solid rgb(220, 220, 220);
+    border-bottom: 1px solid rgb(220, 220, 220);
+    height: 100px;
+    margin: auto;
+}

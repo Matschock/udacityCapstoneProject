@@ -15,43 +15,63 @@
       <div id="navbarview">
         <a href="" onclick="return false;">navigation</a>
       </div>
-      <div></div>
-      <div class="headline">
+      <div id="space"></div>
+      <div id="headline">
           Travel Planner
       </div>
     </div>
   </header>
 
   <!-- MAIN_GRID -->
-  <main>
+  <main id="main" class="grid-full">
     <!-- NAV_BAR -->
-    <div id="navbar" class="fadeIn">
-      <div class ="holder location">
-        <label for="loc">Where are you going?</label>
-        <input type="text" id="loc" placeholder="enter your next travel location">
+    <div id="navbar" class="holder fadeIn grid-navbar">
+      <div id="location">
+        <label for="location" id="locationlabel">Where are you going?</label>
+        <input type="text" id="locationinput" placeholder="enter your next travel location">
       </div>
-      <div class ="holder startdate">
-        <label for="startdate">From</label>
-        <input type= "date" id="startdate" min="2022-06-01" max="2030-07-01"></textarea> 
+      <div id="startdate">
+        <label for="startdate" id="startdatelabel">From</label>
+        <input type= "date" id="startdateinput" min="2022-06-01" max="2030-07-01">
       </div>
-      <div class ="holder enddate">
-        <label for="enddate">Till</label>
-        <input type= "date" id="enddate" min="2022-06-01" max="2030-07-01"></textarea> 
+      <div id="enddate">
+        <label for="enddate" id="enddatelabel">Till</label>
+        <input type= "date" id="enddateinput" min="2022-06-01" max="2030-07-01">
       </div>
-      <div class = "holder bGenerate"> 
-        <button id="generate" type = "submit"> Generate </button>
+      <div id="bAdd"> 
+        <button id="add" type = "submit"> Add </button>
       </div>
     </div>
     <!-- TRAVEL_PLAN  -->
-    <div class = "travelcard">
-      <div class ="holder entry">
-        <div class = "title">Most Recent Entry</div>
-        <div id = "entryHolder">
-          <div id = "date"></div> 
-          <div id = "temp"></div>
-          <div id = "content"></div>
-          <div id = "image"></div>
+    <div id="travelplan">
+      <div class="heading holder">Most Recent Entry</div>
+      <div id="travelcard" class="holder grid-travelcard">
+        <div id="title" class="holder">
+          <div class="label">Next journey destination: </div>
+          <div id="traveldestination">London</div>
         </div>
+        <div id="dates" class="holder">
+          <div class="label">From:</div>
+          <div id="datefrom">01.01.2017</div>
+          <div class="label">Until:</div>
+          <div id="dateuntil">02.01.2017</div>
+        </div>
+        <div id="counter" class="holder">
+          <div class="label"><span>Countdown</span></div>
+          <div id="countdown">17</div>
+          <div class="label"> days until journey start</div>
+        </div>
+        <div id="weather" class="holder">
+          <!-- <div class="weather-item">Temp: 17C</div>
+          <div class="weather-item">Temp: 17C</div>
+          <div class="weather-item">Temp: 17C</div>
+          <div class="weather-item">Temp: 17C</div>
+          <div class="weather-item">Temp: 17C</div> -->
+        </div>
+        <div id="content" class="holder">
+          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempora aut reprehenderit harum, aliquam cupiditate inventore natus ipsa eos est, fugit necessitatibus fugiat et maxime eum. Sint ullam cupiditate odio eos.</p>
+        </div>
+        <div id="picture" class="holder"></div>
       </div>
     </div>
   </main>

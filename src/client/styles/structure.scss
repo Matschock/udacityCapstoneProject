@@ -4,53 +4,60 @@ header {
     height: 75px;
     top: 0;
     left:0;
-    background: rgb(235,235,235);
+    //background: rgb(235,235,235);
+    background: tomato;
     z-index: 2;
     color: black;
     border-bottom: 1px solid rgb(220, 220, 220);
     border-top: 2px solid rgb(220, 220, 220);
 }
 
-main{
-    display: grid;
-    width: 98vw;
-    grid-template-columns: 100%;
-    grid-template-rows: auto auto;
-    grid-template-areas: 
-    "nb"
-    "tc";
-    grid-gap: 10px;
-    z-index: 1;
+#main{
     padding-top: 75px;
     padding-bottom: 75px;
     justify-content: center;
-    border: 1px solid rgb(202, 202, 202);
+    // border: 1px solid rgb(202, 202, 202);
+}
+
+.grid-full{
+    display: grid;
+    width: 98vw;
+    grid-template-columns: repeat(2,1fr);
+    grid-template-rows: auto minmax(100px, auto);
+    grid-template-areas:
+    "n n"
+    "t t";
+    grid-gap: 10px;
+    z-index: 1;
 }
 
 #navbar{
-    grid-area: nb;
-    background: rgb(221, 12, 12);
-    display: grid;
-    width: 100%;
-    grid-template-columns: 1fr 1fr auto;
-    grid-template-rows: auto auto;
-    grid-template-areas: 
-    "loc loc bg"
-    "sd ed bg";
-    grid-gap: 10px;
-    z-index: 1;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    justify-content: center;
+    grid-area: n;
+    transition: height 1s;
+    overflow: hidden;
+    background: rgb(44, 136, 193);
 }
 
-.travelcard{
-    grid-area: tc;
-    background: rgb(235,235,235);
-    border-top: 1px solid rgb(220, 220, 220);
-    border-bottom: 1px solid rgb(220, 220, 220);
-    border-radius: 4px;
-    border: 1px solid rgb(202, 202, 202);
+.fadeOut{
+    height: 0px;
+    border:none;
+    padding: 0px;
+}
+.fadeIn{
+    height: 80px;
+}
+
+#travelplan{
+    grid-area: t;
+    background: lightsalmon;
+    border-top: 2px solid #444;
+    border-bottom: 2px solid #444;
+    //border-radius: 4px;
+    //border: 1px solid rgb(202, 202, 202);
+    //border: none;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
 }
 
 footer{
@@ -59,7 +66,8 @@ footer{
     height: 75px;
     bottom: -5px;
     left:0;
-    background: rgb(235,235,235);
+    //background: rgb(235,235,235);
+    background: tomato;
     z-index: 2;
     color: black;
     border-top: 1px solid rgb(220, 220, 220);
@@ -67,16 +75,16 @@ footer{
 }
 
 @media (min-width:800px) {
-    .main{
-        grid-template-columns: 300px 1fr;
-        grid-template-rows: auto;
-        grid-template-areas: 
-        "nb tc";
-    }
-    .navbar{
-        // margin: 5px;
-    }
-    .travelcard{
-        // margin: 5px;
-    }
+    // .main{
+    //     grid-template-columns: 300px 1fr;
+    //     grid-template-rows: auto;
+    //     grid-template-areas: 
+    //     "nb tc";
+    // }
+    // .navbar{
+    //     // margin: 5px;
+    // }
+    // .travelcard{
+    //     // margin: 5px;
+    // }
 }
