@@ -166,11 +166,14 @@ const updateWebsite = async (dayCountdown,fullWeatherData, picturepath) => {
         // weatherdata - fullWeatherData
         console.log('updateWebsite: weatherdata received')
         console.log(fullWeatherData)
+        console.log(fullWeatherData[0])
         const weathercontainer = document.getElementById('weather');
         let i = 1;
-        for (day in fullWeatherData){
-            let weatheritem = document.createElement(div);
-            weatheritem.classList.add(weather-item);
+        for (let day of fullWeatherData){
+            console.log('updateWebsite: weatherdata received day')
+            console.log(day)
+            let weatheritem = document.createElement("div");
+            weatheritem.classList.add("weather-item");
             weatheritem.innerHTML = `${i} - Temp: ${day.temp} \u00B0 C`;
             weathercontainer.appendChild(weatheritem);
         }
