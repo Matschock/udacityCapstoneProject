@@ -14,7 +14,6 @@ const getPictureData = async (api_key_pixabay, location) => {
     const res = await fetch(url);
     try{
         const data = await res.json();
-        console.log(`Pixalog hits: ${data.totalHits}`)
         // if no picture found for entered location, search for "no image found"
         if(data.totalHits === 0) {
             const url = urlFoundation+API_key+'&q=not found&image_type=photo'
@@ -27,6 +26,11 @@ const getPictureData = async (api_key_pixabay, location) => {
             } catch(error) {
                 console.log("error",error)
             }
+        } else if (data.totalHits >= 10) {
+            // get random picture out of the first 10 pictures
+            const nmbr = Math.floor(Math.random()*10);
+            const picturepath = data.hits[nmbr].webformatURL;
+            return picturepath;
         } else {
             // extract picture url from received data
             console.log(`getPicture.js: ${data.hits[0].webformatURL}`)

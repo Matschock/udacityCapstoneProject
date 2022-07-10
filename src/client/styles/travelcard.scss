@@ -145,7 +145,7 @@
 @media (min-width:1000px) {
     .grid-travelcard{
         grid-template-columns: minmax(300px, auto) 600px;
-        grid-template-rows: 50px 50px 50px minmax(200px, auto) 120px;
+        grid-template-rows: 50px 50px 50px minmax(200px, auto) 110px;
         grid-template-areas:
         "title picture"
         "dates picture"
