@@ -1,6 +1,8 @@
 .heading{
-    background: yellow;
+    background: #444;
+    color: whitesmoke;
     margin-bottom: 10px;
+    padding: 5px;
     font-size: 20px;
     font-weight: bold;
     font-style: italic;
@@ -32,11 +34,13 @@
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    background: skyblue;
+    background: whitesmoke;
 }
 #title > div {
     margin-right: 5px;
     margin-left: 5px;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 .label{
     font-size: 0.8em;
@@ -52,11 +56,13 @@
     grid-area: dates;
     display: flex;
     flex-direction: row;
-    background: skyblue;
+    background: whitesmoke;
 }
 #dates > div{
     margin-right: 5px;
     margin-left: 5px;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 #datefrom{
     font-style: italic;
@@ -71,11 +77,13 @@
     grid-area: counter;
     display: flex;
     flex-direction: row;
-    background: skyblue;
+    background: whitesmoke;
 }
 #counter > div{
     margin-right: 5px;
     margin-left: 5px;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 #countdown{
     font-weight: bold;
@@ -95,8 +103,11 @@
 
 #content{
     grid-area: content;
-    background: skyblue;
+    background: whitesmoke;
     font-size: 0.8em;
+}
+#content.p{
+    margin-top: 5px;
 }
 
 #pictureholder{
@@ -114,8 +125,7 @@
 }
 
 .weather-item{
-    border-radius: 4px;
-    border: 1px solid #444;
+    border-radius: 0px;
     border-top: 1px solid rgb(220, 220, 220);
     border-bottom: 1px solid rgb(220, 220, 220);
     min-width: 100px;
@@ -145,7 +155,7 @@
 @media (min-width:1000px) {
     .grid-travelcard{
         grid-template-columns: minmax(300px, auto) 600px;
-        grid-template-rows: 50px 50px 50px minmax(200px, auto) 110px;
+        grid-template-rows: 50px 50px 50px minmax(200px, auto) 120px;
         grid-template-areas:
         "title picture"
         "dates picture"

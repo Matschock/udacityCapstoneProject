@@ -11,6 +11,11 @@ async function handleNewLocationSubmit(event){
         if(!inputCheckPassed){
             return
         }
+        // make are invisible:
+        const travelplan = document.getElementById("travelplan");
+        travelplan.classList.add("isnotvisible");
+        travelplan.classList.remove("isvisible");
+
 
         // get API keys
         const urlGeonames = 'http://api.geonames.org/searchJSON?q=';
@@ -158,6 +163,7 @@ const updateWebsite = async (dayCountdown,fullWeatherData, picturepath) => {
         const allData = await request.json();
         const lastIndex = allData.length - 1;
         
+        const travelplan = document.getElementById("travelplan");
         document.getElementById('traveldestination').innerHTML = allData[lastIndex].city;
         document.getElementById('datefrom').innerHTML = allData[lastIndex].startdate;
         document.getElementById('dateuntil').innerHTML = allData[lastIndex].enddate;
@@ -189,6 +195,8 @@ const updateWebsite = async (dayCountdown,fullWeatherData, picturepath) => {
             weatheritem.appendChild(weatheritemtemp);
             weatheritem.appendChild(weatheritemminmax);
             weathercontainer.appendChild(documentFragment);
+            travelplan.classList.remove("isnotvisible");
+            travelplan.classList.add("isvisible");
         }
     } catch(error) {
         console.log("error", error);

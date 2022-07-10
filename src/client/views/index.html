@@ -43,7 +43,7 @@
       </div>
     </div>
     <!-- TRAVEL_PLAN  -->
-    <div id="travelplan">
+    <div id="travelplan" class="isnotvisible">
       <div class="heading holder">Most Recent Entry</div>
       <div id="travelcard" class="holder grid-travelcard">
         <div id="title" class="holder">
@@ -77,5 +77,14 @@
       <p>This is a footer</p>
     </div>
   </footer>
+  <script>
+    // Check that service workers are supported
+    if ('serviceWorker' in navigator) {
+        // Use the window load event to keep the page load performant
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js');
+        });
+    }
+   </script>
 </body>
 </html>
