@@ -66,11 +66,30 @@ button{
     background: #186ae5;
     color: #ebebeb;
     font-size: 18px;
+    font-weight: bold;
     font-family: 'Oswald', sans-serif;
     border: none;
-    border: 1px solid #145cc8;
-    border-radius: 3px;
-    box-shadow: 2px 4px 5px #444;
+    border-radius: 5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-align:center;
+    background-size: 300% 100%;
+    moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+    background-image: linear-gradient(to right, #f5dd62, #e43b03, #fa7185, #ea5612);
+    box-shadow: 0 4px 15px 0 rgba(213, 68, 20, 0.796);
+}
+button:hover{
+    background-position: 100% 0;
+    moz-transition: all .4s ease-in-out;
+    -o-transition: all .4s ease-in-out;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+.button:focus {
+    outline: none;
 }
 
 input{

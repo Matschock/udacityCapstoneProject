@@ -162,20 +162,33 @@ const updateWebsite = async (dayCountdown,fullWeatherData, picturepath) => {
         document.getElementById('datefrom').innerHTML = allData[lastIndex].startdate;
         document.getElementById('dateuntil').innerHTML = allData[lastIndex].enddate;
         document.getElementById('countdown').innerHTML = dayCountdown;
-        document.getElementById('picture').innerHTML = `<img src="${picturepath}" alt="alt">`;
+        document.getElementById('pictureholder').innerHTML = `<img id="picture" src="${picturepath}" alt="alt">`;
         // weatherdata - fullWeatherData
         console.log('updateWebsite: weatherdata received')
         console.log(fullWeatherData)
-        console.log(fullWeatherData[0])
         const weathercontainer = document.getElementById('weather');
-        let i = 1;
+        // remove all weatheritems if already existing
+        weathercontainer.textContent = '';
         for (let day of fullWeatherData){
-            console.log('updateWebsite: weatherdata received day')
-            console.log(day)
             let weatheritem = document.createElement("div");
             weatheritem.classList.add("weather-item");
-            weatheritem.innerHTML = `${i} - Temp: ${day.temp} \u00B0 C`;
-            weathercontainer.appendChild(weatheritem);
+            // weatheritem.innerHTML = `${day.date} - Temp: ${day.temp} \u00B0 C`;
+            let weatheritemdate = document.createElement("div");
+            let weatheritemtemp = document.createElement("div");
+            let weatheritemminmax = document.createElement("div");
+            weatheritemdate.className = "weather-item-date";
+            weatheritemdate.innerHTML = `${day.date}`;
+            weatheritemtemp.className = "weather-item-temp";
+            weatheritemtemp.innerHTML = `${day.temp}\u00B0C`;
+            weatheritemminmax.className = "weather-item-minmax";
+            weatheritemminmax.innerHTML = `${day.min_temp}\u00B0C / ${day.max_temp}\u00B0C`;
+            // appendChild
+            let documentFragment = document.createDocumentFragment();
+            documentFragment.appendChild(weatheritem);
+            weatheritem.appendChild(weatheritemdate);
+            weatheritem.appendChild(weatheritemtemp);
+            weatheritem.appendChild(weatheritemminmax);
+            weathercontainer.appendChild(documentFragment);
         }
     } catch(error) {
         console.log("error", error);

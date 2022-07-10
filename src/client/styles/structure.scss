@@ -4,7 +4,6 @@ header {
     height: 75px;
     top: 0;
     left:0;
-    //background: rgb(235,235,235);
     background: tomato;
     z-index: 2;
     color: black;
@@ -16,7 +15,6 @@ header {
     padding-top: 75px;
     padding-bottom: 75px;
     justify-content: center;
-    // border: 1px solid rgb(202, 202, 202);
 }
 
 .grid-full{
@@ -52,9 +50,6 @@ header {
     background: lightsalmon;
     border-top: 2px solid #444;
     border-bottom: 2px solid #444;
-    //border-radius: 4px;
-    //border: 1px solid rgb(202, 202, 202);
-    //border: none;
     display: flex;
     flex-direction: column;
     padding: 5px;
@@ -66,7 +61,6 @@ footer{
     height: 75px;
     bottom: -5px;
     left:0;
-    //background: rgb(235,235,235);
     background: tomato;
     z-index: 2;
     color: black;

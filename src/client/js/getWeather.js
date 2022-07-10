@@ -6,13 +6,11 @@ const getWeatherData = async (api_key_weatherbit, travelData,dayCountdown,jouney
     let weatherData = [];
     if (((dayCountdown) <= 1) && ((dayCountdown+jouneyDuration) <= 16)){
         // display current weather for the current day
-        getCurrentWeatherData(api_key_weatherbit,travelData, weatherData)
-        .then(function(weatherData){
+        await getCurrentWeatherData(api_key_weatherbit,travelData, weatherData)
+        .then(async function(weatherData){
             console.log('getWeather: Weather Data Current - Loop 1')
-            console.log(weatherData)
-            getForecastWeatherData(api_key_weatherbit,travelData, weatherData, true)
+            await getForecastWeatherData(api_key_weatherbit,travelData, weatherData, true)
             .then(function(weatherData){
-                console.log(weatherData)
                 return weatherData;
             })
         })
@@ -21,17 +19,14 @@ const getWeatherData = async (api_key_weatherbit, travelData,dayCountdown,jouney
         console.log('getWeather: Weather Data Current - Loop 2')
         await getForecastWeatherData(api_key_weatherbit,travelData, weatherData, false)
         .then(function(weatherData){
-            console.log('getWeather: weatherData?')
-            console.log(weatherData)
             return weatherData;
         })
     } else if ((dayCountdown <= 1) && ((dayCountdown+jouneyDuration) >= 16)){
         // display current weather for the current day & forecast & more than forecast (for vacation longer than 16 days)
-        getCurrentWeatherData(api_key_weatherbit,travelData, weatherData)
-        .then(function(weatherData){
+        await getCurrentWeatherData(api_key_weatherbit,travelData, weatherData)
+        .then(async function(weatherData){
             console.log('getWeather: Weather Data Current - Loop 3')
-            console.log(weatherData)
-            getForecastWeatherData(api_key_weatherbit,travelData, weatherData, true)
+            await getForecastWeatherData(api_key_weatherbit,travelData, weatherData, true)
             .then(function(weatherData){
                 const nDays = dayCountdown+jouneyDuration-16;
                 setUnknownWeatherData(nDays, weatherData, travelData.startdate,false)
@@ -43,7 +38,7 @@ const getWeatherData = async (api_key_weatherbit, travelData,dayCountdown,jouney
     } else if ((dayCountdown <= 16) && ((dayCountdown+jouneyDuration) >= 16)){
         console.log('getWeather: Weather Data Current - Loop 4')
         // mix forecast and historical
-        getForecastWeatherData(api_key_weatherbit,travelData, weatherData, false)
+        await getForecastWeatherData(api_key_weatherbit,travelData, weatherData, false)
         .then(function(weatherData){
             const nDays = dayCountdown+jouneyDuration-16;
             setUnknownWeatherData(nDays, weatherData, travelData.startdate,false)
