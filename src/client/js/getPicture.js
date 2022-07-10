@@ -30,6 +30,7 @@ const getPictureData = async (api_key_pixabay, location) => {
             // get random picture out of the first 10 pictures
             const nmbr = Math.floor(Math.random()*10);
             const picturepath = data.hits[nmbr].webformatURL;
+            console.log(`getPicture.js: ${data.hits[0].webformatURL}`)
             return picturepath;
         } else {
             // extract picture url from received data

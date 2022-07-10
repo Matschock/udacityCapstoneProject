@@ -1,10 +1,10 @@
-# Weather-Journal App Project
+# Travel Planer Web-App
 
 ## Overview
-This project requires you to create an asynchronous web app that uses Web API and user data to dynamically update the UI. 
+This web pages allows you to enter your planned trip and then displays information about that location, the forecasted weather if the trip is upcoming in the next 16 days and a countdown how many days you have to wait to start your trip. 
 
 ## Instructions
-This will require modifying the `server.js` file and the `website/app.js` file. You can see `index.html` for element references, and once you are finished with the project steps, you can use `style.css` to style your application to customized perfection.
+Enter any city or location and the start and end dat of your journey. When you are done, press enter. 
 
 ## Extras
-If you are interested in testing your code as you go, you can use `tests.js` as a template for writing and running some basic tests for your code.
+Navigation bar can be faded in and out.

@@ -168,17 +168,14 @@ const updateWebsite = async (dayCountdown,fullWeatherData, picturepath) => {
         document.getElementById('datefrom').innerHTML = allData[lastIndex].startdate;
         document.getElementById('dateuntil').innerHTML = allData[lastIndex].enddate;
         document.getElementById('countdown').innerHTML = dayCountdown;
+        console.log(`getPicture.js: ${picturepath}`)
         document.getElementById('pictureholder').innerHTML = `<img id="picture" src="${picturepath}" alt="alt">`;
-        // weatherdata - fullWeatherData
-        console.log('updateWebsite: weatherdata received')
-        console.log(fullWeatherData)
         const weathercontainer = document.getElementById('weather');
         // remove all weatheritems if already existing
         weathercontainer.textContent = '';
         for (let day of fullWeatherData){
             let weatheritem = document.createElement("div");
             weatheritem.classList.add("weather-item");
-            // weatheritem.innerHTML = `${day.date} - Temp: ${day.temp} \u00B0 C`;
             let weatheritemdate = document.createElement("div");
             let weatheritemtemp = document.createElement("div");
             let weatheritemminmax = document.createElement("div");
